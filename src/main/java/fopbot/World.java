@@ -1,125 +1,80 @@
 package fopbot;
 
-public class World {
+import java.util.Collection;
 
-  private static boolean global = false;
-  private static KarelWorld world;
-
-  /**
-   * If true, show the world's gui
-   */
-  public static void setVisible(boolean visible) {
-    if (visible && world == null) {
-      setSize(10, 10);
-    }
-    world.setVisible(visible);
-  }
-
-  /**
-   * @return the worlds height
-   */
-  public static int getHeight() {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    return world.getHeight();
-  }
+public interface World {
 
   /**
    * @return the worlds width
    */
-  public static int getWidth() {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    return world.getWidth();
-  }
+  int getWidth();
 
   /**
-   * Sets the worlds size
+   * @return the worlds height
    */
-  public static void setSize(int width, int height) {
-    world = new KarelWorld(width, height);
-    global = true;
-  }
+  int getHeight();
+
+  Collection<Entity> getEntities(int x, int y);
 
   /**
-   * Sets the delay a robot has to wait after each action
+   * @return true if a block is in field (x, y)
+   */
+  boolean hasBlockInField(int x, int y);
+
+  /**
+   * @return true if there is a wall at field (x, y) in direction dir
+   */
+  boolean fieldHasWallInDirection(int x, int y, Direction dir);
+
+  /**
+   * @return true if at least one coin is in field (x, y)
+   */
+  boolean hasCoinInField(int x, int y);
+
+  /**
+   * @return true if another robot is in field (x, y)
+   */
+  boolean hasAnotherRobotInField(int x, int y, Robot robot);
+
+  /**
+   * Puts down N coins at field (x, y)
+   */
+  void putCoins(int x, int y, int numberOfCoins);
+
+  /**
+   * Tries to remove one coin from the field (x,y)
    *
-   * @param delay (in ms)
+   * @return true if a  coin got removed
    */
-  public static void setDelay(int delay) {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    world.setDelay(delay);
-  }
+  boolean pickCoin(int x, int y);
 
   /**
-   * @return the current delay (in ms)
+   * Places a block at field (x, y)
    */
-  public static int getDelay() {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    return world.getDelay();
-  }
+  void putBlock(int x, int y);
+
+  /**
+   * Adds a robot to the world at field (x, y) looking at direction dir
+   */
+  Robot newRobot(int x, int y, Direction dir, int numberOfCoins);
 
   /**
    * Reset the world (remove all entities)
    */
-  public static void reset() {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    world.reset();
-  }
+  void reset();
 
   /**
-   * Places a horizontal wall at field (x,y)
+   * Indicate that the controlling script starts action in this world
    */
-  public static void placeHorizontalWall(int x, int y) {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    world.placeHorizontalWall(x, y);
-  }
+  void start();
 
   /**
-   * Places a vertical wall at field (x,y)
+   * @return If the world is still running a script
    */
-  public static void placeVerticalWall(int x, int y) {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    world.placeVerticalWall(x, y);
-  }
+  boolean isRunning();
 
   /**
-   * Places a block at field (x,y)
+   * Indicate that the controlling script as finished executing
    */
-  public static void placeBlock(int x, int y) {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    world.placeBlock(x, y);
-  }
-
-  /**
-   * Puts down N coins at field (x,y)
-   */
-  public static void putCoins(int x, int y, int numberOfCoins) {
-    if (world == null) {
-      setSize(10, 10);
-    }
-    world.putCoins(x, y, numberOfCoins);
-  }
-
-  protected static boolean isGlobal() {
-    return global;
-  }
-
-  public static KarelWorld getGlobalWorld() {
-    return world;
-  }
+  void stop();
 }
